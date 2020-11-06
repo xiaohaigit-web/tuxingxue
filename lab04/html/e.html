@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta http-equiv="Content-type" content="text/html;charset=utf-8">
+	<title>lab04-e</title>
+	<script id="rtvshader" type="x-shader/x-vertex">
+	attribute vec4 vPosition;
+	attribute vec4 vColor;
+	varying vec4 fColor;
+	
+	uniform vec3 theta;
+	uniform vec3 s;
+	uniform vec3 pos;
+	void main()
+	{
+		//compute the sins and cos of theta for each of the three axis in one computation
+		vec3 angles = radians( theta );
+		vec3 cost = cos( theta );
+		vec3 sint = sin( theta );
+
+		mat4 rx = mat4(  1.0,  0.0,  0.0, 0.0,
+						 0.0,  cost.x,  sint.x, 0.0,
+						 0.0,  -sint.x,  cost.x, 0.0,
+						 0.0,  0.0,  0.0, 1.0
+						 );
+
+		mat4 ry = mat4(  cost.y,  0.0, -sint.y,  0.0,
+						 0.0,  1.0,  0.0,  0.0,
+						 sint.y,  0.0,  cost.y,  0.0,
+						 0.0,  0.0,  0.0,  1.0
+						 );
+
+		mat4 rz = mat4(  cost.z,  sint.z,  0.0,  0.0,
+						 -sint.z,  cost.z,  0.0,  0.0,
+						 0.0,  0.0,  1.0,  0.0,
+						 0.0,  0.0,  0.0,  1.0
+						 );
+
+        mat4 st = mat4 (  s.x,  0.0,  0.0,  0.0,
+                          0.0,  s.y,  0.0,  0.0,
+                          0.0,  0.0,  s.z,  0.0,
+                          0.0,  0.0,  0.0,  1.0
+						 );
+		mat4 dt = mat4(  1.0,  0.0,  0.0, 0.0,
+						 0.0,  1.0,  0.0, 0.0,
+						 0.0,  0.0,  1.0, 0.0,
+						 pos.x, pos.y,  pos.z, 1.0
+		 );
+		
+		fColor = vColor;
+		gl_Position = vPosition;
+		gl_Position = dt * st * rz * ry * rx *  gl_Position;
+		gl_Position.z = -gl_Position.z;
+	}
+	</script>
+
+	<script id="rtfshader" type="x-shader/x-fragment">
+	precision mediump float;
+	varying vec4 fColor;
+	void main()
+	{
+		gl_FragColor = fColor;
+	}
+	</script>
+	<script type="text/javascript" src="../common/webgl-utils.js"></script>
+	<script type="text/javascript" src="../common/initShaders.js"></script>
+	<script type="text/javascript" src="../common/gl-matrix-min.js"></script>
+
+	<script type="text/javascript" src="../js/e.js"></script>
+</head>
+
+<body>
+	<h1>实验4-E</h1>
+	<canvas id="canvas" width="600" height="600" style="background-color: black;">
+		你的浏览器不支持HTML5 canvas元素
+	</canvas>
+	<div>
+		<p>点击选择图形</p>
+		<button id="choice">三角形</button>
+		
+		<p id="shuchu"></p>
+		<input type="range" style="display: none;" id="lineNum" value="6" min="4" max="60" step="6">
+		<button onclick="history.go(0)">清空画布</button>
+	</div>
+</body>
+
+</html>

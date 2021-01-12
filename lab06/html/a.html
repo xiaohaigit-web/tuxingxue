@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script id="vertex-shader" type="x-shader/x-vertex">
+        attribute vec4 vPosition;
+
+		uniform mat4 modelViewMatrix;
+		uniform mat4 projectionMatrix;
+
+		void main()
+		{
+			gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+		}
+	</script>
+
+    <script id="fragment-shader" type="x-shader/x-fragment">
+        precision mediump float;
+
+		void main()
+		{
+			gl_FragColor = vec4( 0.0, 0.0, 0.0, 1.0 );
+		}
+	</script>
+
+    <script type="text/javascript" src="../common/webgl-utils.js"></script>
+    <script type="text/javascript" src="../common/initShaders.js"></script>
+    <script type="text/javascript" src="../common/gl-matrix.js"></script>
+    <script type="text/javascript" src="../common/objloader.js"></script>
+
+    <script type="text/javascript" src="../js/a.js"></script>
+</head>
+
+<body onload="initSphere()">
+    <h1>球体线框模型</h1>
+	<li>a键增加线框</li>
+	<li>d键减少线框</li>
+
+    <canvas id="gl-canvas" width="400" height="400">
+        你的浏览器不支持HTML5 Canvas元素
+    </canvas>
+</body>
+
+</html>
